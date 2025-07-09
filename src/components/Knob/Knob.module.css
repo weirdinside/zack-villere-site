@@ -1,0 +1,24 @@
+.knob {
+  height: 90%;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.knob__outline {
+  border-radius: 200px;
+  border: 2px solid white;
+  width: 100%;
+  height: 100%;
+}
+
+.knob__indicator {
+  font-size: 40px;
+  width: 120%;
+  height: 120%;
+  border-radius: 502px;
+  position: absolute;
+}
+

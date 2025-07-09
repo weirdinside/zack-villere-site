@@ -1,0 +1,181 @@
+.player {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(244, 245, 241);
+  gap: 10%;
+  border-radius: 0px 0px 5px 5px;
+  overflow: hidden;
+}
+
+.artwork {
+  aspect-ratio: 1 / 1;
+  width: 90%;
+  height: auto;
+  margin-left: 5%;
+  background-size: cover;
+  background-position: center;
+}
+
+.songinfo {
+  width: 100%;
+  height: 100%;
+  margin-right: 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  margin: 0;
+  padding: 0;
+  font-size: clamp(19px, 2.5vh, 46px);
+}
+
+.artists {
+  margin: 0;
+  padding: 0;
+  font-size: clamp(15px, 2vh, 37px);
+}
+
+.album {
+  margin: 0;
+  padding: 0;
+  font-size: clamp(15px, 2vh, 37px);
+}
+
+.player__main {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 5%;
+}
+
+.time__controls {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  transform: translateY(0vh);
+  transition: 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.time__controls.inactive {
+  transform: translateY(6vh);
+  transition: 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.time {
+  position: absolute;
+  left: 5%;
+}
+
+.time.duration {
+  left: auto;
+  right: 5%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 60%;
+  height: 10px;
+  background: linear-gradient(
+    90deg,
+    #00000035 calc(100% - 2px),
+    rgba(0, 0, 0, 0.276) 0
+  );
+  background-size: calc((100% - 60 * 2px) / 40 + 2px) 100%;
+  border: 1px solid black;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+.volume {
+  width: 62%;
+  height: 10px;
+  position: absolute;
+  bottom: -5vh;
+  transition: 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+  overflow: hidden;
+  -webkit-appearance: none;
+  appearance: none;
+  /* background: linear-gradient(
+    90deg,
+    #00000035 calc(100% - 2px),
+    rgba(0, 0, 0, 0.276) 0
+  ); */
+  /* background-size: calc((100% - 60 * 2px) / 40 + 2px) 100%; */
+}
+
+.volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #0394ee;
+  cursor: pointer;
+  box-shadow: -407px 0 0 400px #0394ee;
+}
+
+.volume::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #0394ee;
+  cursor: pointer;
+  box-shadow: -10px 0 0 10px #0394ee;
+}
+
+.volume.active {
+  bottom: 3.9vh;
+  transition: 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+  position: absolute;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #000000;
+  cursor: pointer;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #000000;
+  cursor: pointer;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.time {
+}
+
+.slider {
+}
+
+.time.duration {
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}

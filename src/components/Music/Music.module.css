@@ -1,0 +1,46 @@
+.music {
+  animation: slideInFromRight 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+  position: relative;
+}
+
+.outlet {
+  width: 0%;
+  position: absolute;
+  height: 0%;
+}
+
+.outlet.active {
+  width: 100%;
+  height: 100%;
+}
+
+.list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0%;
+  display: flex;
+  flex-direction: column;
+}
+
+.list_item {
+  padding: 1.4%;
+  color: inherit;
+  font-size: clamp(10px, 2.4vh, 18px);
+  text-decoration: none;
+  width: 98%;
+}
+
+.list_item.selected {
+  background-color: black;
+  color: white;
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
