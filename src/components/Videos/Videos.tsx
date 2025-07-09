@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
-import { SNOEY_MUSIC } from "../../constants/songs";
-import styles from "./Music.module.css";
+import { useState, useRef, useEffect } from "react";
+import { SNOEY_VIDEOS } from "../../constants/videos";
 import AutoscrollText from "../Autoscroll";
+import styles from "./Videos.module.css";
 
-export default function Music({
+export default function Videos({
   setOption,
   scrollPos,
-  setHoveredSong,
+  setHoveredVideo,
 }: {
   setOption: (arg0: "navigate" | "playSong" | "playVideo") => void;
   scrollPos: number;
-  setHoveredSong: (arg0: SongInfo) => void;
+  setHoveredVideo: (arg0: VideoInfo) => void;
 }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const previousScrollPos = useRef(scrollPos);
@@ -21,13 +21,13 @@ export default function Music({
     const scrollingDown = scrollPos > previousScrollPos.current;
     const scrollingUp = scrollPos < previousScrollPos.current;
 
-    if (scrollingDown && selectedIndex < SNOEY_MUSIC.length - 1) {
+    if (scrollingDown && selectedIndex < SNOEY_VIDEOS.length - 1) {
       setSelectedIndex((prev) => prev + 1);
     } else if (scrollingUp && selectedIndex > 0) {
       setSelectedIndex((prev) => prev - 1);
     } else if (scrollingUp && selectedIndex === 0) {
-      setSelectedIndex(SNOEY_MUSIC.length - 1);
-    } else if (scrollingDown && selectedIndex === SNOEY_MUSIC.length - 1) {
+      setSelectedIndex(SNOEY_VIDEOS.length - 1);
+    } else if (scrollingDown && selectedIndex === SNOEY_VIDEOS.length - 1) {
       setSelectedIndex(0);
     }
 
@@ -35,12 +35,12 @@ export default function Music({
   }, [scrollPos]);
 
   useEffect(() => {
-    setOption("playSong");
-    setHoveredSong(SNOEY_MUSIC[0]);
+    setOption("playVideo");
+    setHoveredVideo(SNOEY_VIDEOS[0]);
   }, []);
 
   useEffect(() => {
-    setHoveredSong(SNOEY_MUSIC[selectedIndex]);
+    setHoveredVideo(SNOEY_VIDEOS[selectedIndex]);
     const container = containerRef.current;
     if (container) {
       const item = container.children[selectedIndex] as HTMLElement;
@@ -53,15 +53,15 @@ export default function Music({
   return (
     <div className={styles.music}>
       <ul ref={containerRef} className={styles.list}>
-        {SNOEY_MUSIC.map((song, index) => (
+        {SNOEY_VIDEOS.map((video, index) => (
           <li
-            key={song.title}
+            key={video.name}
             className={`${styles.list_item} ${
               selectedIndex === index ? styles.selected : ""
             }`}
           >
             <AutoscrollText align="left" trigger={selectedIndex === index}>
-              {song.title}
+              {video.name}
             </AutoscrollText>
           </li>
         ))}

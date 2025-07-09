@@ -13,13 +13,13 @@ export default function Home({
   setLocation,
 }: {
   scrollPos: number;
-  setOption: (arg0: "navigate" | "play") => void;
+  setOption: (arg0: "navigate" | "playSong" | "playVideo") => void;
   setLocation: (arg0: string) => void;
 }) {
   const navItems: NavItemType[] = [
     { name: "Music", link: "music" },
+    { name: "Videos", link: "videos" },
     { name: "Store", link: "store" },
-    { name: "Instagram", link: "https://instagram.com/zackvillere" },
     { name: "Contact", link: "" },
   ];
 

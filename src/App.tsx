@@ -16,15 +16,17 @@ import Player from "./components/Music/Player/Player";
 import { SNOEY_MUSIC } from "./constants/songs";
 import { MusicPlayerContext } from "./contexts/MusicPlayerContext";
 import Store from "./components/Store/Store";
+import Videos from "./components/Videos/Videos";
 
 function App() {
   const [scrollPos, setScrollPos] = useState<number>(0);
 
-  const [option, setOption] = useState<"navigate" | "play">("navigate");
+  const [option, setOption] = useState<"navigate" | "playSong" | "playVideo">(
+    "navigate"
+  );
   const [location, setLocation] = useState<string>("");
   const [hoveredSong, setHoveredSong] = useState<SongInfo>();
-
-  const [tickVolume, setTickVolume] = useState<number>(1);
+  const [hoveredVideo, setHoveredVideo] = useState<VideoInfo>();
 
   const [pageTitle, setPageTitle] = useState<string>("zackvillere.com");
 
@@ -52,6 +54,7 @@ function App() {
     rwd,
     ffwd,
     rrwd,
+    playerVolume,
   } = useContext(MusicPlayerContext);
 
   function togglePlayback() {
@@ -63,22 +66,25 @@ function App() {
     option,
     location,
   }: {
-    option: "navigate" | "play";
+    option: "navigate" | "playSong" | "playVideo";
     location: string;
   }) {
     if (option === "navigate") {
-      if (location.includes("https://") && typeof window !== "undefined") {
-        const newWindow = window.open(location, "_blank");
-        if (newWindow) return newWindow.focus();
-      } else {
-        return navigate(location);
-      }
+      // if (location.includes("https://") && typeof window !== "undefined") {
+      //   const newWindow = window.open(location, "_blank");
+      //   if (newWindow) return newWindow.focus();
+      // } else {
+      return navigate(location);
+      // }
     }
 
-    if (option === "play" && hoveredSong) {
+    if (option === "playSong" && hoveredSong) {
       selectSong(hoveredSong);
       navigate("music/player");
       if (songInfo.title === hoveredSong.title) play();
+    }
+
+    if (option === "playVideo" && hoveredVideo) {
     }
   }
 
@@ -106,12 +112,13 @@ function App() {
       clearTimeout(seekHoldTimeoutRef.current);
     }
   }
+
   useEffect(() => {
     Howler.autoUnlock = true;
 
     tickSoundRef.current = new Howl({
       src: ["click.m4a", "click.ogg", "click.mp3"],
-      volume: tickVolume,
+      volume: playerVolume,
       format: ["ogg", "m4a", "mp3"],
     });
 
@@ -174,6 +181,16 @@ function App() {
                 element={
                   <Music
                     setHoveredSong={setHoveredSong}
+                    scrollPos={scrollPos}
+                    setOption={setOption}
+                  />
+                }
+              />
+              <Route
+                path="videos"
+                element={
+                  <Videos
+                    setHoveredVideo={setHoveredVideo}
                     scrollPos={scrollPos}
                     setOption={setOption}
                   />
