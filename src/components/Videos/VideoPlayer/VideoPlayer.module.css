@@ -1,0 +1,19 @@
+.videoplayer {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.videoplayer_content {
+  border-radius: 5px;
+  overflow: hidden;
+  width: 95%;
+}
+
+.video{
+    
+}

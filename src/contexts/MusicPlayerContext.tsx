@@ -98,6 +98,7 @@ export default function MusicPlayerProvider({
       setPlaylist([]);
     }
   }
+
   function fwd() {
     const currentIndex = playlist.findIndex(
       (song) => song.url === songInfo.url
@@ -138,7 +139,6 @@ export default function MusicPlayerProvider({
     setCurrentTime(0);
     setPlaybackRate(1);
     setSongInfo({ title: "", artist: "", album: "", art: "", url: "" });
-
     if (playerRef.current) playerRef.current.src = "";
   }
 

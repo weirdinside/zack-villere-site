@@ -17,6 +17,9 @@ import { SNOEY_MUSIC } from "./constants/songs";
 import { MusicPlayerContext } from "./contexts/MusicPlayerContext";
 import Store from "./components/Store/Store";
 import Videos from "./components/Videos/Videos";
+import Contact from "./components/Contact/Contact";
+import VideoPlayer from "./components/Videos/VideoPlayer/VideoPlayer";
+import { VideoPlayerContext } from "./contexts/VideoPlayerContext";
 
 function App() {
   const [scrollPos, setScrollPos] = useState<number>(0);
@@ -43,9 +46,13 @@ function App() {
 
   const navigate = useNavigate();
 
+  const { playVideo, pauseVideo, stopVideo, seekVideo, videoPlayerState } =
+    useContext(VideoPlayerContext);
+
   const {
     play,
     pause,
+    stop,
     playerState,
     selectSong,
     songInfo,
@@ -70,12 +77,18 @@ function App() {
     location: string;
   }) {
     if (option === "navigate") {
-      // if (location.includes("https://") && typeof window !== "undefined") {
-      //   const newWindow = window.open(location, "_blank");
-      //   if (newWindow) return newWindow.focus();
-      // } else {
-      return navigate(location);
-      // }
+      if (location.includes("https://") && typeof window !== "undefined") {
+        const newWindow = window.open(location, "_blank");
+        if (newWindow) return newWindow.focus();
+      } else if (location.startsWith("mailto:")) {
+        const newWindow = window.open(location, "_blank");
+        if (newWindow) return newWindow.focus();
+      } else if (locationHook.pathname === "/videos/player") {
+      } else if (locationHook.pathname === "/music/player") {
+        pause();
+      } else {
+        return navigate(location);
+      }
     }
 
     if (option === "playSong" && hoveredSong) {
@@ -85,6 +98,22 @@ function App() {
     }
 
     if (option === "playVideo" && hoveredVideo) {
+      stop();
+      navigate("videos/player");
+    }
+  }
+
+  function toggleVideoPlayback(){
+    console.log(videoPlayerState)
+    if(videoPlayerState === 'paused') playVideo();
+    if(videoPlayerState === 'playing') pauseVideo();
+  }
+
+  function handlePPButton() {
+    if (locationHook.pathname === "/videos/player") {
+      toggleVideoPlayback();
+    } else {
+      togglePlayback();
     }
   }
 
@@ -197,8 +226,24 @@ function App() {
                 }
               />
               <Route
+                path="contact"
+                element={
+                  <Contact
+                    setLocation={setLocation}
+                    scrollPos={scrollPos}
+                    setOption={setOption}
+                  />
+                }
+              />
+              <Route
                 path="music/player"
                 element={<Player scrollPos={scrollPos} />}
+              />
+              <Route
+                path="videos/player"
+                element={
+                  <VideoPlayer video={hoveredVideo} scrollPos={scrollPos} />
+                }
               />
               <Route path="store" element={<Store />} />
             </Routes>
@@ -310,7 +355,9 @@ function App() {
             onPointerCancel={() => {
               pressUpSoundRef.current?.play();
             }}
-            onClick={togglePlayback}
+            onClick={() => {
+              handlePPButton();
+            }}
             className={styles.pp}
           >
             <div className={styles.pp_icons}>

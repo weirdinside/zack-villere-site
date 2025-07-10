@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+  useLayoutEffect,
+} from "react";
 
 // ------------------------------------ //
 //                 TYPES                //
@@ -173,17 +180,36 @@ export default function AutoscrollText({
     ]
   );
 
-  useEffect(function detectResize() {
-    const containerRef = marqueeRef.current;
-    if (!containerRef) return;
-    const myObserver = new ResizeObserver(([entry]) => {
-      setContainerWidth(entry.contentRect.width);
-    });
-    myObserver.observe(containerRef);
-    return () => {
-      myObserver.disconnect();
+  useLayoutEffect(() => {
+    const container = marqueeRef.current;
+    const text = textRef.current;
+
+    if (!container || !text) return;
+
+    const updateMeasurements = () => {
+      const containerW = container.offsetWidth;
+      const textW = text.offsetWidth;
+      const diff = textW - containerW;
+
+      setContainerWidth(containerW);
+      setScrollTime(diff * 21 * (1 / scrollSpeed));
+      setDifference(diff);
+      setHasMeasured(true);
     };
-  }, []);
+
+    updateMeasurements();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateMeasurements();
+    });
+
+    resizeObserver.observe(container);
+    resizeObserver.observe(text);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [children, scrollSpeed]);
 
   useEffect(() => {
     if (prevChildrenRef.current !== children) {

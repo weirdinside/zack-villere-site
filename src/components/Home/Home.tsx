@@ -20,7 +20,7 @@ export default function Home({
     { name: "Music", link: "music" },
     { name: "Videos", link: "videos" },
     { name: "Store", link: "store" },
-    { name: "Contact", link: "" },
+    { name: "Contact", link: "contact" },
   ];
 
   const [selectedIndex, setSelectedIndex] = useState(0);
