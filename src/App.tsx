@@ -20,6 +20,7 @@ import Videos from "./components/Videos/Videos";
 import Contact from "./components/Contact/Contact";
 import VideoPlayer from "./components/Videos/VideoPlayer/VideoPlayer";
 import { VideoPlayerContext } from "./contexts/VideoPlayerContext";
+import Shows from "./components/Shows/Shows";
 
 function App() {
   const [scrollPos, setScrollPos] = useState<number>(0);
@@ -103,10 +104,10 @@ function App() {
     }
   }
 
-  function toggleVideoPlayback(){
-    console.log(videoPlayerState)
-    if(videoPlayerState === 'paused') playVideo();
-    if(videoPlayerState === 'playing') pauseVideo();
+  function toggleVideoPlayback() {
+    console.log(videoPlayerState);
+    if (videoPlayerState === "paused") playVideo();
+    if (videoPlayerState === "playing") pauseVideo();
   }
 
   function handlePPButton() {
@@ -141,6 +142,12 @@ function App() {
       clearTimeout(seekHoldTimeoutRef.current);
     }
   }
+
+  useEffect(()=>{
+    if(tickSoundRef.current){
+      tickSoundRef.current.volume(playerVolume)
+    }
+  }, [tickSoundRef, playerVolume])
 
   useEffect(() => {
     Howler.autoUnlock = true;
@@ -225,6 +232,7 @@ function App() {
                   />
                 }
               />
+              <Route path="shows" element={<Shows />} />
               <Route
                 path="contact"
                 element={

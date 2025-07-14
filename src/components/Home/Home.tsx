@@ -19,12 +19,15 @@ export default function Home({
   const navItems: NavItemType[] = [
     { name: "Music", link: "music" },
     { name: "Videos", link: "videos" },
+    { name: "Shows", link: "shows" },
     { name: "Store", link: "store" },
     { name: "Contact", link: "contact" },
   ];
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const previousScrollPos = useRef(scrollPos);
+
+    const containerRef = useRef<HTMLUListElement>(null);
 
   const location = useLocation();
 
@@ -48,6 +51,13 @@ export default function Home({
 
   useEffect(() => {
     setLocation(navItems[selectedIndex].link);
+     const container = containerRef.current;
+     if (container) {
+      const item = container.children[selectedIndex] as HTMLElement;
+      if (item) {
+        item.scrollIntoView({ behavior: "instant", block: "nearest" });
+      }
+    }
   }, [selectedIndex]);
 
   useEffect(() => {

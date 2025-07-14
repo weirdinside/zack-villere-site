@@ -13,7 +13,7 @@
 .list_item {
   padding: 1.4%;
   color: inherit;
-  font-size: clamp(10px, 2.5vh, 25px);
+  font-size: clamp(10px, 2.4vh, 18px);
   text-decoration: none;
 }
 

@@ -44,6 +44,8 @@ export default function VideoPlayer({
       const scrollingUp = scrollPos < previousScrollPos.current;
       const currentVolume = playerVolume;
 
+      if(videoPlayerRef.current) videoPlayerRef.current.volume = playerVolume
+
       if (scrollingDown) {
         const newVolume = currentVolume + 0.05;
         if (newVolume <= 1) {
@@ -64,6 +66,15 @@ export default function VideoPlayer({
 
   return (
     <div className={styles.videoplayer}>
+      <input
+        min={0}
+        max={1}
+        step={0.05}
+        type="range"
+        value={playerVolume}
+        readOnly
+        className={`${styles.volume} ${volumeVisible && styles.active}`}
+      />
       <div className={styles.videoplayer_content}>
         <video
           playsInline

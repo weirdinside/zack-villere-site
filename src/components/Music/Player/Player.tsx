@@ -1,10 +1,4 @@
-import {
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  type PointerEventHandler,
-} from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MusicPlayerContext } from "../../../contexts/MusicPlayerContext";
 import AutoscrollText from "../../Autoscroll";
@@ -145,11 +139,20 @@ export default function Player({ scrollPos }: { scrollPos: number }) {
             volumeVisible && styles.inactive
           }`}
         >
+          {currentTime && duration && (
+            <>
+              <p className={styles.time}>{`${Math.floor(
+                currentTime / 60
+              )}:${Math.floor(currentTime % 60)
+                .toString()
+                .padStart(2, "0")}`}</p>
+            </>
+          )}
           <input
             onPointerDown={(e: React.PointerEvent<HTMLInputElement>) => {
               const input = e.target as HTMLInputElement;
               setIsSeeking(true);
-              console.log(parseFloat(input.value) * duration)
+              console.log(parseFloat(input.value) * duration);
               setSongTime(parseFloat(input.value) * duration);
             }}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,11 +177,6 @@ export default function Player({ scrollPos }: { scrollPos: number }) {
           />
           {currentTime && duration && (
             <>
-              <p className={styles.time}>{`${Math.floor(
-                currentTime / 60
-              )}:${Math.floor(currentTime % 60)
-                .toString()
-                .padStart(2, "0")}`}</p>
               <p className={`${styles.time} ${styles.duration}`}>{`${Math.floor(
                 duration / 60
               )}:${Math.floor(duration % 60)
