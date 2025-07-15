@@ -67,6 +67,10 @@ export default function Home({
   }, [location]);
 
   useEffect(() => {
+    previousScrollPos.current = scrollPos;
+  }, []);
+
+  useEffect(() => {
     const container = containerRef.current;
     if (container) {
       const item = container.children[selectedIndex] as HTMLElement;

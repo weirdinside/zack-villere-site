@@ -46,7 +46,7 @@ export default function Gallery({
   }, [scrollPos]);
 
   useEffect(() => {
-    setImageState('image')
+    setImageState("image");
     const container = containerRef.current;
     if (container) {
       const item = container.children[selectedIndex] as HTMLElement;
@@ -55,6 +55,10 @@ export default function Gallery({
       }
     }
   }, [selectedIndex]);
+
+  useEffect(() => {
+    previousScrollPos.current = scrollPos;
+  }, []);
 
   return (
     <div className={styles.gallery}>

@@ -37,6 +37,7 @@ export default function Music({
   useEffect(() => {
     setOption("playSong");
     setHoveredSong(SNOEY_MUSIC[0]);
+    previousScrollPos.current = scrollPos;
   }, []);
 
   useEffect(() => {
