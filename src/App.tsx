@@ -1,3 +1,7 @@
+// -------------------------- //
+//           IMPORTS          //
+// -------------------------- //
+
 import { Howl } from "howler";
 import { useContext, useEffect, useRef, useState } from "react";
 import { IoBatteryHalf } from "react-icons/io5";
@@ -23,9 +27,16 @@ import { VideoPlayerContext } from "./contexts/VideoPlayerContext";
 import Shows from "./components/Shows/Shows";
 import Gallery from "./components/Gallery/Gallery";
 
-function App() {
-  const [scrollPos, setScrollPos] = useState<number>(0);
+// -------------------------- //
+//       COMPONENT ENTRY      //
+// -------------------------- //
 
+export default function App() {
+  // -------------------------- //
+  //           STATES           //
+  // -------------------------- //
+
+  const [scrollPos, setScrollPos] = useState<number>(0);
   const [option, setOption] = useState<
     "navigate" | "playSong" | "playVideo" | "toggleImageState"
   >("navigate");
@@ -33,21 +44,24 @@ function App() {
   const [hoveredSong, setHoveredSong] = useState<SongInfo>();
   const [hoveredVideo, setHoveredVideo] = useState<VideoInfo>();
   const [imageState, setImageState] = useState<"image" | "caption">("image");
-
   const [pageTitle, setPageTitle] = useState<string>("zackvillere.com");
 
   const locationHook = useLocation();
+  const navigate = useNavigate();
 
+  // -------------------------- //
+  //            REFS            //
+  // -------------------------- //
   const tickSoundRef = useRef<Howl>(null);
-
   const pressDownSoundRef = useRef<Howl>(null);
   const pressUpSoundRef = useRef<Howl>(null);
-
-  const seekIntervalRef = useRef<number>(null);
-  const seekHoldTimeoutRef = useRef<number>(null);
+  const seekIntervalRef = useRef<NodeJS.Timeout>(null);
+  const seekHoldTimeoutRef = useRef<NodeJS.Timeout>(null);
   const isSeekingRef = useRef<boolean>(false);
 
-  const navigate = useNavigate();
+  // -------------------------- //
+  //          CONTEXTS          //
+  // -------------------------- //
 
   const { playVideo, pauseVideo, stopVideo, seekVideo, videoPlayerState } =
     useContext(VideoPlayerContext);
@@ -66,6 +80,10 @@ function App() {
     rrwd,
     playerVolume,
   } = useContext(MusicPlayerContext);
+
+  // -------------------------- //
+  //          FUNCTIONS         //
+  // -------------------------- //
 
   function togglePlayback() {
     if (playerState === "paused") return play();
@@ -154,10 +172,16 @@ function App() {
     }
   }
 
+  // -------------------------- //
+  //            HOOKS           //
+  // -------------------------- //
+
   useEffect(() => {
     if (tickSoundRef.current) {
       tickSoundRef.current.volume(playerVolume);
     }
+    if (pressDownSoundRef.current)
+      pressDownSoundRef.current.volume(playerVolume);
   }, [tickSoundRef, playerVolume]);
 
   useEffect(() => {
@@ -190,6 +214,10 @@ function App() {
       tickSoundRef.current.play();
     }
   }, [scrollPos]);
+
+  // -------------------------- //
+  //      COMPONENT RETURN      //
+  // -------------------------- //
 
   return (
     <div
@@ -254,7 +282,16 @@ function App() {
                   />
                 }
               />
-              <Route path="shows" element={<Shows />} />
+              <Route
+                path="shows"
+                element={
+                  <Shows
+                    setLocation={setLocation}
+                    setOption={setOption}
+                    scrollPos={scrollPos}
+                  />
+                }
+              />
               <Route
                 path="contact"
                 element={
@@ -401,5 +438,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

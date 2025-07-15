@@ -1,7 +1,7 @@
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import styles from "./Gallery.module.css";
-import { useState, useRef, useEffect } from "react";
 import { GALLERY_IMAGES } from "../../constants/gallery";
+import styles from "./Gallery.module.css";
 
 export default function Gallery({
   scrollPos,
@@ -20,8 +20,6 @@ export default function Gallery({
   const previousScrollPos = useRef(scrollPos);
 
   const containerRef = useRef<HTMLUListElement>(null);
-
-  const location = useLocation();
 
   useEffect(() => {
     setImageState("image");

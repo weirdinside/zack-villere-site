@@ -70,16 +70,6 @@ export default function Home({
     previousScrollPos.current = scrollPos;
   }, []);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      const item = container.children[selectedIndex] as HTMLElement;
-      if (item) {
-        item.scrollIntoView({ behavior: "instant", block: "nearest" });
-      }
-    }
-  }, [selectedIndex]);
-
   return (
     <div className={styles.home}>
       <ul ref={containerRef} className={styles.list}>
