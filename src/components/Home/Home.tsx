@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import styles from "./Home.module.css";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 
 type NavItemType = {
   name: string;
@@ -19,6 +19,7 @@ export default function Home({
   const navItems: NavItemType[] = [
     { name: "Music", link: "music" },
     { name: "Videos", link: "videos" },
+    { name: "Gallery", link: "gallery" },
     { name: "Shows", link: "shows" },
     { name: "Store", link: "store" },
     { name: "Contact", link: "contact" },
@@ -27,7 +28,7 @@ export default function Home({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const previousScrollPos = useRef(scrollPos);
 
-    const containerRef = useRef<HTMLUListElement>(null);
+  const containerRef = useRef<HTMLUListElement>(null);
 
   const location = useLocation();
 
@@ -51,8 +52,8 @@ export default function Home({
 
   useEffect(() => {
     setLocation(navItems[selectedIndex].link);
-     const container = containerRef.current;
-     if (container) {
+    const container = containerRef.current;
+    if (container) {
       const item = container.children[selectedIndex] as HTMLElement;
       if (item) {
         item.scrollIntoView({ behavior: "instant", block: "nearest" });
@@ -65,9 +66,19 @@ export default function Home({
     setOption("navigate");
   }, [location]);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      const item = container.children[selectedIndex] as HTMLElement;
+      if (item) {
+        item.scrollIntoView({ behavior: "instant", block: "nearest" });
+      }
+    }
+  }, [selectedIndex]);
+
   return (
     <div className={styles.home}>
-      <ul className={styles.list}>
+      <ul ref={containerRef} className={styles.list}>
         {navItems.map((item, index) => (
           <Link
             target="_blank"

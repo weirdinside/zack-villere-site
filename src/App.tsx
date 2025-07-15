@@ -21,16 +21,18 @@ import Contact from "./components/Contact/Contact";
 import VideoPlayer from "./components/Videos/VideoPlayer/VideoPlayer";
 import { VideoPlayerContext } from "./contexts/VideoPlayerContext";
 import Shows from "./components/Shows/Shows";
+import Gallery from "./components/Gallery/Gallery";
 
 function App() {
   const [scrollPos, setScrollPos] = useState<number>(0);
 
-  const [option, setOption] = useState<"navigate" | "playSong" | "playVideo">(
-    "navigate"
-  );
+  const [option, setOption] = useState<
+    "navigate" | "playSong" | "playVideo" | "toggleImageState"
+  >("navigate");
   const [location, setLocation] = useState<string>("");
   const [hoveredSong, setHoveredSong] = useState<SongInfo>();
   const [hoveredVideo, setHoveredVideo] = useState<VideoInfo>();
+  const [imageState, setImageState] = useState<"image" | "caption">("image");
 
   const [pageTitle, setPageTitle] = useState<string>("zackvillere.com");
 
@@ -74,7 +76,7 @@ function App() {
     option,
     location,
   }: {
-    option: "navigate" | "playSong" | "playVideo";
+    option: "navigate" | "playSong" | "playVideo" | "toggleImageState";
     location: string;
   }) {
     if (option === "navigate") {
@@ -102,6 +104,10 @@ function App() {
       stop();
       navigate("videos/player");
     }
+
+    if (option === "toggleImageState") {
+      toggleImageState();
+    }
   }
 
   function toggleVideoPlayback() {
@@ -127,6 +133,11 @@ function App() {
     }, 500);
   }
 
+  function toggleImageState() {
+    if (imageState === "caption") setImageState("image");
+    else setImageState("caption");
+  }
+
   function handleSeekButtonLift(button: "fwd" | "rwd") {
     if (isSeekingRef.current) {
       isSeekingRef.current = false;
@@ -143,11 +154,11 @@ function App() {
     }
   }
 
-  useEffect(()=>{
-    if(tickSoundRef.current){
-      tickSoundRef.current.volume(playerVolume)
+  useEffect(() => {
+    if (tickSoundRef.current) {
+      tickSoundRef.current.volume(playerVolume);
     }
-  }, [tickSoundRef, playerVolume])
+  }, [tickSoundRef, playerVolume]);
 
   useEffect(() => {
     Howler.autoUnlock = true;
@@ -229,6 +240,17 @@ function App() {
                     setHoveredVideo={setHoveredVideo}
                     scrollPos={scrollPos}
                     setOption={setOption}
+                  />
+                }
+              />
+              <Route
+                path="gallery"
+                element={
+                  <Gallery
+                    setImageState={setImageState}
+                    imageState={imageState}
+                    setOption={setOption}
+                    scrollPos={scrollPos}
                   />
                 }
               />
