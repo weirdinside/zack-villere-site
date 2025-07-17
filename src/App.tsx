@@ -2,6 +2,9 @@
 //           IMPORTS          //
 // -------------------------- //
 
+// notes: smallest height and smallest width: 490px h and 380px w
+// correct the screen size for the ipod
+
 import { Howl } from "howler";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
@@ -10,6 +13,9 @@ import {
   MdPause,
   MdPlayArrow,
 } from "react-icons/md";
+import { BsQuestionCircleFill } from "react-icons/bs";
+
+import { IoMdSettings } from "react-icons/io";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import styles from "./App.module.css";
 import Contact from "./components/Contact/Contact";
@@ -58,6 +64,8 @@ import defaulttop from "/images/yetihand/offtop.webp";
 
 import fingerprints from "./assets/fingers.png";
 import scratches from "./assets/scratches.jpg";
+import { SettingsContext } from "./contexts/SettingsContext";
+import SettingsModal from "./components/SettingsModal/SettingsModal";
 
 // -------------------------- //
 //       COMPONENT ENTRY      //
@@ -65,7 +73,7 @@ import scratches from "./assets/scratches.jpg";
 
 export default function App() {
   // -------------------------- //
-  //           STATES           //
+  //     STATES && VARIABLES    //
   // -------------------------- //
 
   const [scrollPos, setScrollPos] = useState<number>(0);
@@ -79,10 +87,11 @@ export default function App() {
   const [pageTitle, setPageTitle] = useState<string>("zackvillere.com");
   const [isScrolling, setIsScrolling] = useState<boolean>(false);
   const [backgroundImage, setBackgroundImage] = useState<string>();
-
   const [yetiHandTopImage, setYetiHandTopImage] = useState<string>(defaulttop);
   const [yetiHandBottomImage, setYetiHandBottomImage] =
     useState<string>(defaultbottom);
+
+  const [activeModal, setActiveModal] = useState<string>('');
 
   const yetiHandsTop = [top9, top8, top7, top6, top5, top4, top3, top2, top1];
   const yetiHandsBottom = [
@@ -103,6 +112,7 @@ export default function App() {
   // -------------------------- //
   //            REFS            //
   // -------------------------- //
+
   const tickSoundRef = useRef<Howl>(null);
   const pressDownSoundRef = useRef<Howl>(null);
   const pressUpSoundRef = useRef<Howl>(null);
@@ -132,6 +142,10 @@ export default function App() {
     playerVolume,
   } = useContext(MusicPlayerContext);
 
+  const { showHand, zoomedIn } = useContext(SettingsContext);
+
+  // const {showHand, zoomedIn, toggleZoomedIn, toggleShowHand} = useContext(SettingsContext);
+
   // -------------------------- //
   //          FUNCTIONS         //
   // -------------------------- //
@@ -151,6 +165,10 @@ export default function App() {
 
     setYetiHandBottomImage(defaultbottom);
     setYetiHandTopImage(defaulttop);
+  }
+
+  function closeModal(){
+    setActiveModal('')
   }
 
   function handleCenterClick({
@@ -308,55 +326,72 @@ export default function App() {
       }}
       className={styles.page}
     >
+     <SettingsModal activeModal={activeModal} closeModal={closeModal}/>
+      <div className={styles.options_box}>
+        <IoMdSettings onClick={()=>{
+          setActiveModal('settings')
+        }} className={styles.option} />
+        <BsQuestionCircleFill className={styles.option} />
+      </div>
       <div className={styles.page_container}>
-        {yetiHandsTop.map((image) => {
-          return (
-            <div
-              className={`${styles.yetihand_top} ${
-                image === yetiHandTopImage ? styles.visible : styles.hidden
-              }`}
-              style={{ backgroundImage: `url(${image})` }}
-            />
-          );
-        })}
-        {yetiHandsBottom.map((image) => {
-          return (
+        {showHand &&
+          yetiHandsTop.map((image) => {
+            return (
+              <div
+                className={`${styles.yetihand_top} ${
+                  image === yetiHandTopImage ? styles.visible : styles.hidden
+                } ${zoomedIn && styles.zoomed}`}
+                style={{ backgroundImage: `url(${image})` }}
+              />
+            );
+          })}
+        {showHand &&
+          yetiHandsBottom.map((image) => {
+            return (
+              <div
+                className={`${styles.yetihand_bottom} ${
+                  image === yetiHandBottomImage ? styles.visible : styles.hidden
+                } ${zoomedIn && styles.zoomed}`}
+                style={{ backgroundImage: `url(${image})` }}
+              />
+            );
+          })}
+
+        {showHand && (
+          <>
             <div
               className={`${styles.yetihand_bottom} ${
-                image === yetiHandBottomImage ? styles.visible : styles.hidden
-              }`}
-              style={{ backgroundImage: `url(${image})` }}
+                defaultbottom === yetiHandBottomImage
+                  ? styles.visible
+                  : styles.hidden
+              } ${zoomedIn && styles.zoomed}`}
+              style={{ backgroundImage: `url(${defaultbottom})` }}
             />
-          );
-        })}
-
-        <div
-          className={`${styles.yetihand_bottom} ${
-                defaultbottom === yetiHandBottomImage ? styles.visible : styles.hidden
-              }`}
-          style={{ backgroundImage: `url(${defaultbottom})` }}
-        />
-        <div
-          className={`${styles.yetihand_top} ${
+            <div
+              className={`${styles.yetihand_top} ${
                 defaulttop === yetiHandTopImage ? styles.visible : styles.hidden
-              }`}
-          style={{ backgroundImage: `url(${defaulttop})` }}
-        />
+              } ${zoomedIn && styles.zoomed}`}
+              style={{ backgroundImage: `url(${defaulttop})` }}
+            />
 
-         <div
-          className={`${styles.yetihand_bottom} ${
-                clickbottom === yetiHandBottomImage ? styles.visible : styles.hidden
-              }`}
-          style={{ backgroundImage: `url(${clickbottom})` }}
-        />
-        <div
-          className={`${styles.yetihand_top} ${
+            <div
+              className={`${styles.yetihand_bottom} ${
+                clickbottom === yetiHandBottomImage
+                  ? styles.visible
+                  : styles.hidden
+              } ${zoomedIn && styles.zoomed}`}
+              style={{ backgroundImage: `url(${clickbottom})` }}
+            />
+            <div
+              className={`${styles.yetihand_top} ${
                 clicktop === yetiHandTopImage ? styles.visible : styles.hidden
-              }`}
-          style={{ backgroundImage: `url(${clicktop})` }}
-        />
+              } ${zoomedIn && styles.zoomed}`}
+              style={{ backgroundImage: `url(${clicktop})` }}
+            />
+          </>
+        )}
 
-        <div className={styles.player}>
+        <div className={`${styles.player} ${zoomedIn && styles.zoomed}`}>
           <div
             className={styles.player_overlay}
             style={{ backgroundImage: `url(${backgroundImage})` }}

@@ -13,9 +13,10 @@
   font-weight: 600;
   user-select: none;
   -webkit-user-select: none;
+
 }
 
-.page_container{
+.page_container {
   position: relative;
   width: 100vw;
   height: 100svh;
@@ -47,7 +48,7 @@
   background-size: clamp(150px, 119vh, 750px);
   background-position: 0% 0%;
   background-repeat: no-repeat;
-overflow: visible;
+  overflow: visible;
   pointer-events: none;
 }
 
@@ -79,6 +80,55 @@ overflow: visible;
   filter: drop-shadow(-10px 10px 10px #00000083) brightness(0.9);
 }
 
+.player.zoomed {
+  scale: 200%;
+  transform: translateY(30%);
+}
+
+.yetihand_bottom.zoomed {
+  scale: 190%;
+  transform: translateY(30%) translateX(2%);
+}
+
+.yetihand_top.zoomed {
+  scale: 190%;
+  transform: translateY(30%) translateX(2%);
+}
+
+@media screen and (max-width: 600px) {
+  .player.zoomed {
+    scale: 150%;
+    transform: translateY(30%);
+  }
+
+  .yetihand_top.zoomed {
+    scale: 140%;
+    transform: translateY(30%);
+  }
+
+  .yetihand_bottom.zoomed {
+    scale: 140%;
+    transform: translateY(30%);
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .player.zoomed {
+    scale: 142%;
+    transform: translateY(30%);
+  }
+
+    .yetihand_top.zoomed {
+    scale: 135%;
+    transform: translateY(30%);
+  }
+
+  .yetihand_bottom.zoomed {
+    scale: 135%;
+    transform: translateY(30%);
+  }
+}
+
 .player_overlay {
   position: absolute;
   height: 100%;
@@ -89,7 +139,7 @@ overflow: visible;
   z-index: 2;
 }
 
-.player_screen_overlay{
+.player_screen_overlay {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -101,8 +151,7 @@ overflow: visible;
   filter: blur(0.2px);
 }
 
-.player_screen_overlay.scratches{
-
+.player_screen_overlay.scratches {
 }
 
 .player_screen {
@@ -117,7 +166,6 @@ overflow: visible;
   border-radius: 0.7vh;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 1) inset;
   z-index: 5;
-  filter: contrast(1.5);
   overflow: hidden;
 }
 
@@ -133,7 +181,7 @@ overflow: visible;
 
 .outlet {
   height: 100%;
-    overflow: auto;
+  overflow: auto;
   user-select: none;
 }
 
@@ -406,4 +454,127 @@ overflow: visible;
   background-position: center;
   width: auto;
   filter: blur(1px);
+}
+
+.options_box {
+  position: absolute;
+  bottom: 1%;
+  display: flex;
+  gap: 5px;
+  right: 1%;
+  z-index: 999;
+}
+
+.option {
+  aspect-ratio: 1 / 1;
+  height: auto;
+  width: clamp(20px, 8vh, 45px);
+  border: 2px solid black;
+  position: relative;
+  border-radius: 500px;
+  color: rgb(244, 244, 244);
+  background: rgba(255, 255, 255, 0.11);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 200px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 22px 11px rgba(255, 255, 255, 1.1);
+  position: relative;
+  overflow: hidden;
+  transition: 0.4s
+    linear(
+      0,
+      1 37.8%,
+      0.883 44.2%,
+      0.855 47.1%,
+      0.846 50%,
+      0.853 52.7%,
+      0.875 55.5%,
+      1 65.5%,
+      0.967 69.4%,
+      0.957 73.1%,
+      0.964 76.5%,
+      1 84.5%,
+      0.993 89.3%,
+      1
+    );
+  box-shadow: 0px 0px 10px #000;
+}
+
+.option:active {
+  background: rgba(43, 43, 43, 0.26);
+  box-shadow: 0px 0px 10px #000 inset;
+}
+
+.option::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.option::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+.option:active::after {
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+.option:active::before {
+  background: linear-gradient(
+    -90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.option:hover {
+  scale: 1.1;
+  rotate: 365deg;
+  transition: 0.4s
+    linear(
+      0,
+      1 37.8%,
+      0.883 44.2%,
+      0.855 47.1%,
+      0.846 50%,
+      0.853 52.7%,
+      0.875 55.5%,
+      1 65.5%,
+      0.967 69.4%,
+      0.957 73.1%,
+      0.964 76.5%,
+      1 84.5%,
+      0.993 89.3%,
+      1
+    );
 }
