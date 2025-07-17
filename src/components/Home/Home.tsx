@@ -75,7 +75,6 @@ export default function Home({
       <ul ref={containerRef} className={styles.list}>
         {navItems.map((item, index) => (
           <Link
-            target="_blank"
             key={item.name}
             to={item.link}
             className={`${styles.list_item} ${

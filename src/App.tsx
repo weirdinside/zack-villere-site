@@ -4,7 +4,6 @@
 
 import { Howl } from "howler";
 import { useContext, useEffect, useRef, useState } from "react";
-import { IoBatteryHalf } from "react-icons/io5";
 import {
   MdFastForward,
   MdFastRewind,
@@ -13,19 +12,52 @@ import {
 } from "react-icons/md";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import styles from "./App.module.css";
+import Contact from "./components/Contact/Contact";
+import Gallery from "./components/Gallery/Gallery";
 import Home from "./components/Home/Home";
 import Knob from "./components/Knob/Knob";
 import Music from "./components/Music/Music";
 import Player from "./components/Music/Player/Player";
+import Shows from "./components/Shows/Shows";
+import Store from "./components/Store/Store";
+import VideoPlayer from "./components/Videos/VideoPlayer/VideoPlayer";
+import Videos from "./components/Videos/Videos";
 import { SNOEY_MUSIC } from "./constants/songs";
 import { MusicPlayerContext } from "./contexts/MusicPlayerContext";
-import Store from "./components/Store/Store";
-import Videos from "./components/Videos/Videos";
-import Contact from "./components/Contact/Contact";
-import VideoPlayer from "./components/Videos/VideoPlayer/VideoPlayer";
 import { VideoPlayerContext } from "./contexts/VideoPlayerContext";
-import Shows from "./components/Shows/Shows";
-import Gallery from "./components/Gallery/Gallery";
+
+import ppclick from "/images/ppclick.png";
+import centerclick from "/images/centerclick.png";
+import menuclick from "/images/menuclick.png";
+import fwdclick from "/images/fwdclick.png";
+import rwdclick from "/images/rwdclick.png";
+
+import bottom1 from "/images/yetihand/1bottom.webp";
+import bottom2 from "/images/yetihand/2bottom.webp";
+import bottom3 from "/images/yetihand/3bottom.webp";
+import bottom4 from "/images/yetihand/4bottom.webp";
+import bottom5 from "/images/yetihand/5bottom.webp";
+import bottom6 from "/images/yetihand/6bottom.webp";
+import bottom7 from "/images/yetihand/7bottom.webp";
+import bottom8 from "/images/yetihand/8bottom.webp";
+import bottom9 from "/images/yetihand/9bottom.webp";
+import clickbottom from "/images/yetihand/clickbottom.webp";
+import defaultbottom from "/images/yetihand/offbottom.webp";
+
+import top1 from "/images/yetihand/1top.webp";
+import top2 from "/images/yetihand/2top.webp";
+import top3 from "/images/yetihand/3top.webp";
+import top4 from "/images/yetihand/4top.webp";
+import top5 from "/images/yetihand/5top.webp";
+import top6 from "/images/yetihand/6top.webp";
+import top7 from "/images/yetihand/7top.webp";
+import top8 from "/images/yetihand/8top.webp";
+import top9 from "/images/yetihand/9top.webp";
+import clicktop from "/images/yetihand/clicktop.webp";
+import defaulttop from "/images/yetihand/offtop.webp";
+
+import fingerprints from "./assets/fingers.png";
+import scratches from "./assets/scratches.jpg";
 
 // -------------------------- //
 //       COMPONENT ENTRY      //
@@ -45,6 +77,25 @@ export default function App() {
   const [hoveredVideo, setHoveredVideo] = useState<VideoInfo>();
   const [imageState, setImageState] = useState<"image" | "caption">("image");
   const [pageTitle, setPageTitle] = useState<string>("zackvillere.com");
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
+  const [backgroundImage, setBackgroundImage] = useState<string>();
+
+  const [yetiHandTopImage, setYetiHandTopImage] = useState<string>(defaulttop);
+  const [yetiHandBottomImage, setYetiHandBottomImage] =
+    useState<string>(defaultbottom);
+
+  const yetiHandsTop = [top9, top8, top7, top6, top5, top4, top3, top2, top1];
+  const yetiHandsBottom = [
+    bottom9,
+    bottom8,
+    bottom7,
+    bottom6,
+    bottom5,
+    bottom4,
+    bottom3,
+    bottom2,
+    bottom1,
+  ];
 
   const locationHook = useLocation();
   const navigate = useNavigate();
@@ -90,6 +141,18 @@ export default function App() {
     if (playerState === "playing") return pause();
   }
 
+  function setYetiHands(isScrolling: boolean) {
+    const pos = scrollPos % 9;
+
+    if (isScrolling) {
+      setYetiHandBottomImage(yetiHandsBottom[pos]);
+      return setYetiHandTopImage(yetiHandsTop[pos]);
+    }
+
+    setYetiHandBottomImage(defaultbottom);
+    setYetiHandTopImage(defaulttop);
+  }
+
   function handleCenterClick({
     option,
     location,
@@ -129,7 +192,6 @@ export default function App() {
   }
 
   function toggleVideoPlayback() {
-    console.log(videoPlayerState);
     if (videoPlayerState === "paused") playVideo();
     if (videoPlayerState === "playing") pauseVideo();
   }
@@ -177,11 +239,29 @@ export default function App() {
   // -------------------------- //
 
   useEffect(() => {
+    if ("requestIdleCallback" in window) {
+      requestIdleCallback(() => {
+        const images = [
+          ...yetiHandsTop,
+          ...yetiHandsBottom,
+          defaulttop,
+          defaultbottom,
+        ];
+        images.forEach((src) => {
+          const img = new Image();
+          img.src = src;
+        });
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     if (tickSoundRef.current) {
       tickSoundRef.current.volume(playerVolume);
     }
     if (pressDownSoundRef.current)
       pressDownSoundRef.current.volume(playerVolume);
+    if (pressUpSoundRef.current) pressUpSoundRef.current.volume(playerVolume);
   }, [tickSoundRef, playerVolume]);
 
   useEffect(() => {
@@ -213,6 +293,8 @@ export default function App() {
       }
       tickSoundRef.current.play();
     }
+
+    setYetiHands(isScrolling);
   }, [scrollPos]);
 
   // -------------------------- //
@@ -226,213 +308,315 @@ export default function App() {
       }}
       className={styles.page}
     >
-      <div className={styles.player}>
-        <div className={styles.player_screen}>
-          <header className={styles.header}>
-            {playerState === "paused" && (
-              <MdPause className={styles.header_icon} />
-            )}
-            {playerState === "playing" && (
-              <MdPlayArrow className={styles.header_icon} />
-            )}
-            <div className={styles.header_icon} />
-            <div className={styles.header_text}>{pageTitle}</div>
-            <IoBatteryHalf className={styles.header_battery} />
-          </header>
-          <div className={styles.outlet}>
-            <Routes>
-              <Route
-                path="*"
-                element={
-                  <Home
-                    setOption={setOption}
-                    setLocation={setLocation}
-                    scrollPos={scrollPos}
-                  />
-                }
-              />
-              <Route
-                path="music"
-                element={
-                  <Music
-                    setHoveredSong={setHoveredSong}
-                    scrollPos={scrollPos}
-                    setOption={setOption}
-                  />
-                }
-              />
-              <Route
-                path="videos"
-                element={
-                  <Videos
-                    setHoveredVideo={setHoveredVideo}
-                    scrollPos={scrollPos}
-                    setOption={setOption}
-                  />
-                }
-              />
-              <Route
-                path="gallery"
-                element={
-                  <Gallery
-                    setImageState={setImageState}
-                    imageState={imageState}
-                    setOption={setOption}
-                    scrollPos={scrollPos}
-                  />
-                }
-              />
-              <Route
-                path="shows"
-                element={
-                  <Shows
-                    setLocation={setLocation}
-                    setOption={setOption}
-                    scrollPos={scrollPos}
-                  />
-                }
-              />
-              <Route
-                path="contact"
-                element={
-                  <Contact
-                    setLocation={setLocation}
-                    scrollPos={scrollPos}
-                    setOption={setOption}
-                  />
-                }
-              />
-              <Route
-                path="music/player"
-                element={<Player scrollPos={scrollPos} />}
-              />
-              <Route
-                path="videos/player"
-                element={
-                  <VideoPlayer video={hoveredVideo} scrollPos={scrollPos} />
-                }
-              />
-              <Route path="store" element={<Store />} />
-            </Routes>
-          </div>
-        </div>
-        <div className={styles.player_scrollwheel}>
-          <div
-            onClick={() => {
-              handleCenterClick({ option, location });
-            }}
-            onPointerDown={() => {
-              pressDownSoundRef.current?.play();
-            }}
-            onPointerUp={() => {
-              pressUpSoundRef.current?.play();
-            }}
-            onPointerCancel={() => {
-              pressUpSoundRef.current?.play();
-            }}
-            className={styles.center_button}
-          />
-          <div
-            // onPointerDown={() => {
-            //   pressDownSoundRef.current?.play();
-            // }}
-            // onPointerUp={() => {
-            //   pressUpSoundRef.current?.play();
-            // }}
-            // onPointerCancel={() => {
-            //   pressUpSoundRef.current?.play();
-            // }}
-            className={styles.scrollwheel}
-          >
-            <Knob
-              infinite={true}
-              value={scrollPos}
-              setValue={setScrollPos}
-              startValue={0}
-              endValue={12}
-              snap={true}
-              step={1}
+      <div className={styles.page_container}>
+        {yetiHandsTop.map((image) => {
+          return (
+            <div
+              className={`${styles.yetihand_top} ${
+                image === yetiHandTopImage ? styles.visible : styles.hidden
+              }`}
+              style={{ backgroundImage: `url(${image})` }}
             />
-          </div>
+          );
+        })}
+        {yetiHandsBottom.map((image) => {
+          return (
+            <div
+              className={`${styles.yetihand_bottom} ${
+                image === yetiHandBottomImage ? styles.visible : styles.hidden
+              }`}
+              style={{ backgroundImage: `url(${image})` }}
+            />
+          );
+        })}
+
+        <div
+          className={`${styles.yetihand_bottom} ${
+                defaultbottom === yetiHandBottomImage ? styles.visible : styles.hidden
+              }`}
+          style={{ backgroundImage: `url(${defaultbottom})` }}
+        />
+        <div
+          className={`${styles.yetihand_top} ${
+                defaulttop === yetiHandTopImage ? styles.visible : styles.hidden
+              }`}
+          style={{ backgroundImage: `url(${defaulttop})` }}
+        />
+
+         <div
+          className={`${styles.yetihand_bottom} ${
+                clickbottom === yetiHandBottomImage ? styles.visible : styles.hidden
+              }`}
+          style={{ backgroundImage: `url(${clickbottom})` }}
+        />
+        <div
+          className={`${styles.yetihand_top} ${
+                clicktop === yetiHandTopImage ? styles.visible : styles.hidden
+              }`}
+          style={{ backgroundImage: `url(${clicktop})` }}
+        />
+
+        <div className={styles.player}>
           <div
-            onClick={() => {
-              const isHome = locationHook.pathname.split("/").at(-1) === "";
-              if (!isHome) {
-                const previousPath = locationHook.pathname
-                  .split("/")
-                  .slice(0, -1)
-                  .join("/");
-                return navigate(previousPath);
-              }
-            }}
-            onPointerDown={() => {
-              pressDownSoundRef.current?.play();
-            }}
-            onPointerUp={() => {
-              pressUpSoundRef.current?.play();
-            }}
-            className={styles.menu}
-          >
-            menu
-          </div>
-          <div className={styles.menu_outline} />
-          <div
-            onPointerDown={() => {
-              handleSeekPress("fwd");
-              pressDownSoundRef.current?.play();
-            }}
-            onPointerUp={() => {
-              handleSeekButtonLift("fwd");
-              pressUpSoundRef.current?.play();
-            }}
-            onPointerCancel={() => {
-              handleSeekButtonLift("fwd");
-              pressUpSoundRef.current?.play();
-            }}
-            className={styles.fwd}
-          >
-            <MdFastForward className={styles.fwd_icon} />
-          </div>
-          <div className={styles.fwd_outline} />
-          <div
-            onPointerDown={() => {
-              handleSeekPress("rwd");
-              pressDownSoundRef.current?.play();
-            }}
-            onPointerUp={() => {
-              handleSeekButtonLift("rwd");
-              pressUpSoundRef.current?.play();
-            }}
-            onPointerCancel={() => {
-              handleSeekButtonLift("rwd");
-              pressUpSoundRef.current?.play();
-            }}
-            className={styles.rwd}
-          >
-            <MdFastRewind className={styles.rwd_icon} />
-          </div>
-          <div className={styles.rwd_outline} />
-          <div
-            onPointerDown={() => {
-              pressDownSoundRef.current?.play();
-            }}
-            onPointerUp={() => {
-              pressUpSoundRef.current?.play();
-            }}
-            onPointerCancel={() => {
-              pressUpSoundRef.current?.play();
-            }}
-            onClick={() => {
-              handlePPButton();
-            }}
-            className={styles.pp}
-          >
-            <div className={styles.pp_icons}>
-              <MdPlayArrow className={styles.pp_icon} />
-              <MdPause className={styles.pp_icon} />
+            className={styles.player_overlay}
+            style={{ backgroundImage: `url(${backgroundImage})` }}
+          />
+          <div className={styles.player_screen}>
+            {/* <div
+              className={`${styles.player_screen_overlay} ${styles.fingerprints}`}
+              style={{ backgroundImage: `url(${fingerprints})` }}
+            />
+            <div
+              className={`${styles.player_screen_overlay} ${styles.scratches}`}
+              style={{ backgroundImage: `url(${scratches})` }}
+            /> */}
+
+            <header className={styles.header}>
+              {playerState === "paused" && (
+                <MdPause className={styles.header_icon} />
+              )}
+              {playerState === "playing" && (
+                <MdPlayArrow className={styles.header_icon} />
+              )}
+              <div className={styles.header_icon} />
+              <div className={styles.header_text}>{pageTitle}</div>
+              <div className={styles.header_battery} />
+            </header>
+            <div className={styles.outlet}>
+              <Routes>
+                <Route
+                  path="*"
+                  element={
+                    <Home
+                      setOption={setOption}
+                      setLocation={setLocation}
+                      scrollPos={scrollPos}
+                    />
+                  }
+                />
+                <Route
+                  path="music"
+                  element={
+                    <Music
+                      setHoveredSong={setHoveredSong}
+                      scrollPos={scrollPos}
+                      setOption={setOption}
+                    />
+                  }
+                />
+                <Route
+                  path="videos"
+                  element={
+                    <Videos
+                      setHoveredVideo={setHoveredVideo}
+                      scrollPos={scrollPos}
+                      setOption={setOption}
+                    />
+                  }
+                />
+                <Route
+                  path="gallery"
+                  element={
+                    <Gallery
+                      setImageState={setImageState}
+                      imageState={imageState}
+                      setOption={setOption}
+                      scrollPos={scrollPos}
+                    />
+                  }
+                />
+                <Route
+                  path="shows"
+                  element={
+                    <Shows
+                      setLocation={setLocation}
+                      setOption={setOption}
+                      scrollPos={scrollPos}
+                    />
+                  }
+                />
+                <Route
+                  path="contact"
+                  element={
+                    <Contact
+                      setLocation={setLocation}
+                      scrollPos={scrollPos}
+                      setOption={setOption}
+                    />
+                  }
+                />
+                <Route
+                  path="music/player"
+                  element={<Player scrollPos={scrollPos} />}
+                />
+                <Route
+                  path="videos/player"
+                  element={
+                    <VideoPlayer video={hoveredVideo} scrollPos={scrollPos} />
+                  }
+                />
+                <Route path="store" element={<Store />} />
+              </Routes>
             </div>
           </div>
-          <div className={styles.pp_outline} />
+          <div className={styles.player_scrollwheel}>
+            <div
+              onClick={() => {
+                handleCenterClick({ option, location });
+              }}
+              onPointerDown={() => {
+                setBackgroundImage(centerclick);
+                setYetiHandBottomImage(clickbottom);
+                setYetiHandTopImage(clicktop);
+                pressDownSoundRef.current?.play();
+              }}
+              onPointerUp={() => {
+                setYetiHands(false);
+                setBackgroundImage("");
+                pressUpSoundRef.current?.play();
+              }}
+              onPointerCancel={() => {
+                setYetiHands(false);
+                setBackgroundImage("");
+                pressUpSoundRef.current?.play();
+              }}
+              className={styles.center_button}
+            />
+            <div
+              onPointerDown={() => {
+                setIsScrolling(true);
+              }}
+              onPointerUp={() => {
+                setIsScrolling(false);
+                setYetiHands(false);
+              }}
+              onPointerCancel={() => {
+                setIsScrolling(false);
+                setYetiHands(false);
+              }}
+              style={isScrolling ? { height: "200%", width: "200%" } : {}}
+              className={styles.scrollwheel}
+            >
+              <Knob
+                infinite={true}
+                value={scrollPos}
+                setValue={setScrollPos}
+                startValue={0}
+                endValue={10}
+                snap={true}
+                step={1}
+              />
+            </div>
+            <div
+              onClick={() => {
+                const isHome = locationHook.pathname.split("/").at(-1) === "";
+                if (!isHome) {
+                  const previousPath = locationHook.pathname
+                    .split("/")
+                    .slice(0, -1)
+                    .join("/");
+                  return navigate(previousPath);
+                }
+              }}
+              onPointerDown={() => {
+                setYetiHandBottomImage(bottom7);
+                setYetiHandTopImage(top7);
+                setBackgroundImage(menuclick);
+                pressDownSoundRef.current?.play();
+              }}
+              onPointerUp={() => {
+                setYetiHands(false);
+                setBackgroundImage("");
+                pressUpSoundRef.current?.play();
+              }}
+              onPointerCancel={() => {
+                setYetiHands(false);
+                setBackgroundImage("");
+              }}
+              className={styles.menu}
+            >
+              menu
+            </div>
+            <div className={styles.menu_outline} />
+            <div
+              onPointerDown={() => {
+                setBackgroundImage(fwdclick);
+                setYetiHandBottomImage(bottom5);
+                setYetiHandTopImage(top5);
+                handleSeekPress("fwd");
+                pressDownSoundRef.current?.play();
+              }}
+              onPointerUp={() => {
+                setYetiHands(false);
+                handleSeekButtonLift("fwd");
+                setBackgroundImage("");
+                pressUpSoundRef.current?.play();
+              }}
+              onPointerCancel={() => {
+                setYetiHands(false);
+                setBackgroundImage("");
+                handleSeekButtonLift("fwd");
+                pressUpSoundRef.current?.play();
+              }}
+              className={styles.fwd}
+            >
+              <MdFastForward className={styles.fwd_icon} />
+            </div>
+            <div className={styles.fwd_outline} />
+            <div
+              onPointerDown={() => {
+                handleSeekPress("rwd");
+                setYetiHandBottomImage(bottom9);
+                setYetiHandTopImage(top9);
+                setBackgroundImage(rwdclick);
+                pressDownSoundRef.current?.play();
+              }}
+              onPointerUp={() => {
+                setYetiHands(false);
+                handleSeekButtonLift("rwd");
+                setBackgroundImage("");
+                pressUpSoundRef.current?.play();
+              }}
+              onPointerCancel={() => {
+                setYetiHands(false);
+                handleSeekButtonLift("rwd");
+                setBackgroundImage("");
+                pressUpSoundRef.current?.play();
+              }}
+              className={styles.rwd}
+            >
+              <MdFastRewind className={styles.rwd_icon} />
+            </div>
+            <div className={styles.rwd_outline} />
+            <div
+              onPointerDown={() => {
+                setBackgroundImage(ppclick);
+                setYetiHandBottomImage(bottom3);
+                setYetiHandTopImage(top3);
+                pressDownSoundRef.current?.play();
+              }}
+              onPointerUp={() => {
+                setYetiHands(false);
+                setBackgroundImage("");
+                pressUpSoundRef.current?.play();
+              }}
+              onPointerCancel={() => {
+                setYetiHands(false);
+                setBackgroundImage("");
+                pressUpSoundRef.current?.play();
+              }}
+              onClick={() => {
+                handlePPButton();
+              }}
+              className={styles.pp}
+            >
+              <div className={styles.pp_icons}>
+                <MdPlayArrow className={styles.pp_icon} />
+                <MdPause className={styles.pp_icon} />
+              </div>
+            </div>
+            <div className={styles.pp_outline} />
+          </div>
         </div>
       </div>
     </div>

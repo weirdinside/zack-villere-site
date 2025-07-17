@@ -11,17 +11,24 @@
 }
 
 .list_item {
-  padding: 1.4%;
+  padding: 0.4% 1.5%;
   color: inherit;
+    border-top: 0.5px solid transparent;
+  border-bottom: 0.5px solid transparent;
   font-size: clamp(10px, 2.4vh, 18px);
   text-decoration: none;
 }
 
-.list_item.selected {
-  background-color: black;
-  color: white;
+.list_item:first-of-type.selected{
+   border-top: 0.5px solid transparent;
 }
 
+.list_item.selected {
+  background: linear-gradient(#4c95cd 0%, #407fbe 80%, #3672b2 100%);
+  border-top: 0.5px solid black;
+  border-bottom: 0.5px solid black;
+  color: white;
+}
 @keyframes slideInFromRight {
   0% {
     transform: translateX(-100%);

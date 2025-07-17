@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { SNOEY_MUSIC } from "../../constants/songs";
 import styles from "./Music.module.css";
 import AutoscrollText from "../Autoscroll";
+import { useNavigate } from "react-router-dom";
 
 export default function Music({
   setOption,
@@ -15,6 +16,7 @@ export default function Music({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const previousScrollPos = useRef(scrollPos);
 
+  const navigate = useNavigate();
   const containerRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -51,11 +53,18 @@ export default function Music({
     }
   }, [selectedIndex]);
 
+  async function handleSelectSong(song: SongInfo) {
+    setHoveredSong(song);
+    setOption("playSong");
+    navigate("player");
+  }
+
   return (
     <div className={styles.music}>
       <ul ref={containerRef} className={styles.list}>
         {SNOEY_MUSIC.map((song, index) => (
           <li
+            onClick={() => {handleSelectSong(song)}}
             key={song.title}
             className={`${styles.list_item} ${
               selectedIndex === index ? styles.selected : ""

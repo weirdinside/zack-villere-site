@@ -22,11 +22,21 @@
 }
 
 .event {
-  color: black;
-  padding: 10px;
+  padding: 0.4% 1.5%;
+  color: inherit;
+    border-top: 0.5px solid transparent;
+  border-bottom: 0.5px solid transparent;
+  font-size: clamp(10px, 2.4vh, 18px);
+  text-decoration: none;
+}
+
+.event:first-of-type.active{
+   border-top: 0.5px solid transparent;
 }
 
 .event.active {
-  background-color: black;
+  background: linear-gradient(#4c95cd 0%, #407fbe 80%, #3672b2 100%);
+  border-top: 0.5px solid black;
+  border-bottom: 0.5px solid black;
   color: white;
 }

@@ -86,7 +86,7 @@
   height: 10px;
   background: linear-gradient(
     90deg,
-    #00000035 calc(100% - 2px),
+    #78a3e7 calc(100% - 2px),
     rgba(0, 0, 0, 0.276) 0
   );
   background-size: calc((100% - 60 * 2px) / 40 + 2px) 100%;
